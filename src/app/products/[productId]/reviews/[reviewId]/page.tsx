@@ -1,6 +1,7 @@
 
 import { getReview } from "@/lib/reviews";
 import Link from "next/link";
+import { notFound } from "next/navigation";
 
 type Params = {
   productId: string;
@@ -9,18 +10,10 @@ type Params = {
 
 export default async function ProductReview({ params }: { params: Promise<Params> }) {
   const { productId, reviewId } = await params;
-  const review = getReview(productId, reviewId);
 
-  if (!review) {
-    return (
-      <div className="p-6">
-        <h1 className="text-2xl font-bold text-red-600">Review not found</h1>
-        <p>Review {reviewId} doesn't exist for product {productId}</p>
-        <Link href={`/products/${productId}/reviews`} className="text-blue-600 hover:underline">
-          ← Back to all reviews
-        </Link>
-      </div>
-    );
+  const review = getReview(productId, reviewId);
+  if(parseInt(reviewId) > 1000 || !review){
+    notFound();
   }
 
   return (
